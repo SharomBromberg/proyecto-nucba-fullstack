@@ -14,7 +14,7 @@ import {
 import AnimatedText from '../UI/AnimatedText/AnimatedText'
 import { StyledButton } from '../UI/Button/ButtonStyled'
 import ImageBackground from '../UI/Background/Background'
-import bgHero from '../../../public/assets/backgounds/headerBackground.png'
+import bgHero from '/assets/backgounds/headerBackground.png'
 
 const Hero = ({ doScroll }) => {
 	const [selectedIndex, setSelectedIndex] = useState(0)
@@ -117,7 +117,7 @@ const Hero = ({ doScroll }) => {
 								</CategoryItemStyled>
 							))}
 						</CategoryContainerStyled>
-						<CustomImageStyled src="../../public/assets/hero.jpg" alt="" />
+						<CustomImageStyled src="/assets/hero.jpg" alt="" />
 					</ContentContainerStyled>
 
 					<StyledButton type="submit" disabled={!categories[selectedIndex]}>

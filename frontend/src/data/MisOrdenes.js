@@ -1,9 +1,9 @@
-import img from "../../public/assets/product-pictures/ps5.png";
+
 export const pedidos = [
   {
     id: 1,
     title: "PlayStation 5",
-    img: "../../public/assets/product-pictures/ps5.png",
+    img: "/assets/product-pictures/ps5.png",
     pedido: "0002617",
     price: 500,
     category: "Consolas",
@@ -12,7 +12,7 @@ export const pedidos = [
   {
     id: 2,
     title: "Xbox Series X",
-    img: "../../public/assets/product-pictures/xbox.png",
+    img: "/assets/product-pictures/xbox.png",
     pedido: "0002617",
     price: 500,
     category: "Consolas",
@@ -21,7 +21,7 @@ export const pedidos = [
   {
     id: 3,
     title: "Nintendo Switch",
-    img: "../../public/assets/product-pictures/switch.png",
+    img: "/assets/product-pictures/switch.png",
     pedido: "001239",
     price: 300,
     category: "Consolas",
@@ -30,7 +30,7 @@ export const pedidos = [
   {
     id: 4,
     title: "Auriculares Gamer RGB",
-    img: "../../public/assets/product-pictures/headph.png",
+    img: "/assets/product-pictures/headph.png",
     pedido: "0012390",
     price: 80,
     category: "Accesorios",
@@ -38,7 +38,7 @@ export const pedidos = [
   {
     id: 5,
     title: "Control de Xbox Inalámbrico",
-    img: "../../public/assets/product-pictures/control.png",
+    img: "/assets/product-pictures/control.png",
     pedido: "0012999",
     price: 60,
     category: "Accesorios",
@@ -46,7 +46,7 @@ export const pedidos = [
   {
     id: 6,
     title: "Control DualSense",
-    img: "../../public/assets/product-pictures/dualsense.png",
+    img: "/assets/product-pictures/dualsense.png",
     pedido: "0088390",
     price: 70,
     category: "Accesorios",
@@ -54,7 +54,7 @@ export const pedidos = [
   {
     id: 7,
     title: "FIFA 23",
-    img: "../../public/assets/product-pictures/fifa23.png",
+    img: "/assets/product-pictures/fifa23.png",
     pedido: "00102734",
     price: 50,
     category: "juegos",
@@ -62,7 +62,7 @@ export const pedidos = [
   {
     id: 8,
     title: "Call of Duty: Modern Warfare II",
-    img: "../../public/assets/product-pictures/modernwarfare.png",
+    img: "/assets/product-pictures/modernwarfare.png",
     pedido: "0088833",
     price: 60,
     category: "juegos",
@@ -70,7 +70,7 @@ export const pedidos = [
   {
     id: 9,
     title: "Figura de acción de Master Chief",
-    img: "../../public/assets/product-pictures/actfig.png",
+    img: "/assets/product-pictures/actfig.png",
     pedido: "0088833",
     price: 30,
     category: "Merchandising",
