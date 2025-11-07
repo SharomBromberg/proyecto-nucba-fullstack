@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux'
 import { addToCart } from '../../redux/cart/cartSlice'
-import { formatPrice } from '../../utils'
+import { formatPrice, resolveImageSrc } from '../../utils'
 import Button from '../UI/Button/Button'
 import {
 	CardPrice,
@@ -13,10 +13,12 @@ import { toast } from 'sonner'
 
 const CardProducto = ({ id, img, title, desc, price }) => {
 	const dispatch = useDispatch()
+	const cover = resolveImageSrc(img)
+
 	return (
 		<ProductosCard>
 			<ImageContainer>
-				<img src={img} alt={title} />
+				<img src={cover} alt={title} />
 			</ImageContainer>
 
 			<TextContainer>
@@ -28,7 +30,7 @@ const CardProducto = ({ id, img, title, desc, price }) => {
 				<CardPrice>{formatPrice(price)}</CardPrice>
 				<Button
 					onClick={() => {
-						dispatch(addToCart({ img, title, desc, price, id }))
+						dispatch(addToCart({ img: cover, title, desc, price, id }))
 						toast.success('Producto agregado')
 					}}
 				>
