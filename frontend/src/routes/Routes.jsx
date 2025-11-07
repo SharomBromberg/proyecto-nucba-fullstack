@@ -9,6 +9,8 @@ import PageNotFound from '../pages/PageNotFound/PageNotFound'
 import Register from '../pages/Register/Register'
 import Resumen from '../pages/Resumen/Resumen'
 import ProtectedRoute from '../components/ProtectedRoute/ProtectedRoute'
+import AdminRoute from '../components/ProtectedRoute/AdminRoute'
+import AdminProducts from '../pages/AdminProducts/AdminProducts'
 
 function Routes() {
 	return (
@@ -19,6 +21,14 @@ function Routes() {
 			<Route path="/mis-ordenes" element={<MisOrdenes />} />
 			<Route path="/felicitaciones" element={<Felicitaciones />} />
 			<Route path="/resumen/:orderId" element={<Resumen />} />
+			<Route
+				path="/admin/productos"
+				element={
+					<AdminRoute>
+						<AdminProducts />
+					</AdminRoute>
+				}
+			/>
 
 			{/* <Route path="/checkout" element={<Checkout />} /> */}
 			<Route

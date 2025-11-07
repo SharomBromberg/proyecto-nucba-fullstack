@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { Link, useNavigate } from 'react-router-dom'
 
-import { FiHome, FiUser } from 'react-icons/fi'
+import { FiHome, FiSettings, FiUser } from 'react-icons/fi'
 import CartIcon from './CartIcon/CartIcon'
 import ModalCart from './ModalCart/ModalCart'
 import ModalUser from './ModalUser/ModalUser'
@@ -23,6 +23,7 @@ function Navbar() {
 	const { currentUser } = useSelector((state) => state.user)
 	const navigate = useNavigate()
 	const dispatch = useDispatch()
+	const userDisplayName = currentUser?.name ?? currentUser?.nombre
 
 	return (
 		<NavbarContainerStyled>
@@ -46,6 +47,17 @@ function Navbar() {
 					<CartIcon />
 				</CartNavStyled>
 
+				{currentUser?.role === 'admin' && (
+					<motion.div whileTap={{ scale: 0.97 }}>
+						<Link to="/admin/productos">
+							<LinkContainerStyled>
+								<FiSettings color="c8a2ff" />
+							</LinkContainerStyled>
+							Admin
+						</Link>
+					</motion.div>
+				)}
+
 				<UserNavStyled>
 					<UserContainerStyled
 						onClick={() =>
@@ -53,7 +65,7 @@ function Navbar() {
 						}
 					>
 						<SpanStyled>
-							{currentUser ? `${currentUser.nombre}` : 'Inicia Sesion'}
+							{currentUser ? `${userDisplayName}` : 'Inicia Sesion'}
 						</SpanStyled>
 						<FiUser color="c8a2ff" />
 					</UserContainerStyled>

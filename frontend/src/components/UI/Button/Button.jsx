@@ -5,7 +5,8 @@ const Button = ({
 	radius = '32',
 	secondary,
 	disabled = false,
-	onClick = (e) => e.preventDefault(),
+	type = 'button',
+	onClick = () => {},
 }) => {
 	return (
 		<StyledButton
@@ -13,6 +14,7 @@ const Button = ({
 			onClick={onClick}
 			secondary={secondary}
 			radius={radius}
+			type={type}
 			whileTap={{ scale: 0.95 }}
 		>
 			{children}
