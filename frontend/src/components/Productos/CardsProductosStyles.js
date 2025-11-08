@@ -47,9 +47,12 @@ export const ProductosCard = styled.div`
 export const ImageContainer = styled.div`
 	flex: 1;
 	display: flex;
-	height: 70%;
-	place-content: center;
+	align-items: center;
+	justify-content: center;
+	height: 15rem;
 	overflow: hidden;
+	background: rgba(0, 0, 0, 0.15);
+	border-radius: 0.9375rem;
 
 	img {
 		width: 100%;
@@ -69,12 +72,14 @@ export const TextContainer = styled.div`
 		font-weight: 600;
 		color: #f8f9fa;
 		margin: 0 0 0.5rem;
-		margin: 0;
+		text-align: center;
 	}
 	p {
 		color: #b3b3b3;
 		font-size: 1rem;
 		line-height: 1.4;
+		text-align: center;
+		margin: 0;
 	}
 	@media (max-width: ${breakpoints.mobile}) {
     h2 {

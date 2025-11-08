@@ -27,17 +27,10 @@ router.post(
   [
     validateJWT,
     isAdmin,
-    upload.single("image"),
+    upload.array("images", 8),
     check("title", "El titulo es obligatorio").not().isEmpty(),
     check("description", "La descripcion es obligatoria").not().isEmpty(),
-    body("img")
-      .optional()
-      .custom((value, { req }) => {
-        if (!req.file && !value) {
-          throw new Error("Debes cargar una imagen o URL");
-        }
-        return true;
-      }),
+    body("imageUrls").optional().isString(),
     check("price", "El precio debe ser numerico").isNumeric(),
     check("category", "La categoria es obligatoria").not().isEmpty(),
     check("stock", "El stock debe ser numerico").optional().isInt({ min: 0 }),
@@ -54,11 +47,12 @@ router.put(
   [
     validateJWT,
     isAdmin,
-    upload.single("image"),
+    upload.array("images", 8),
     check("id", "El id no es valido").isMongoId(),
     check("title").optional().isString(),
     check("description").optional().isString(),
-    check("img").optional().isString(),
+    body("existingImages").optional().isString(),
+    body("imageUrls").optional().isString(),
     check("price").optional().isNumeric(),
     check("category").optional().isString(),
     check("stock").optional().isInt({ min: 0 }),

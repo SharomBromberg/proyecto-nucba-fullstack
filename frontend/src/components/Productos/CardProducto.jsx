@@ -1,5 +1,4 @@
-import { useDispatch } from 'react-redux'
-import { addToCart } from '../../redux/cart/cartSlice'
+import { useNavigate } from 'react-router-dom'
 import { formatPrice, resolveImageSrc } from '../../utils'
 import Button from '../UI/Button/Button'
 import {
@@ -9,32 +8,35 @@ import {
 	ProductosCard,
 	TextContainer,
 } from './CardsProductosStyles'
-import { toast } from 'sonner'
 
-const CardProducto = ({ id, img, title, desc, price }) => {
-	const dispatch = useDispatch()
+const CardProducto = ({ id, _id, productId, img, title, desc, price }) => {
+	const navigate = useNavigate()
 	const cover = resolveImageSrc(img)
+	const targetId = productId || _id || id
+
+	const handleNavigate = () => {
+		if (targetId) {
+			navigate(`/producto/${targetId}`)
+		}
+	}
 
 	return (
-		<ProductosCard>
+		<ProductosCard onClick={handleNavigate}>
 			<ImageContainer>
 				<img src={cover} alt={title} />
 			</ImageContainer>
 
 			<TextContainer>
 				<h2>{title}</h2>
-				<p>{desc}</p>
 			</TextContainer>
 
 			<ContainerPrice>
 				<CardPrice>{formatPrice(price)}</CardPrice>
-				<Button
-					onClick={() => {
-						dispatch(addToCart({ img: cover, title, desc, price, id }))
-						toast.success('Producto agregado')
-					}}
-				>
-					Agregar
+				<Button onClick={(event) => {
+					event.stopPropagation()
+					handleNavigate()
+				}}>
+					Ver detalles
 				</Button>
 			</ContainerPrice>
 		</ProductosCard>

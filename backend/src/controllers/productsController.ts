@@ -3,12 +3,42 @@ import { FilterQuery } from "mongoose";
 import Product, { IProduct } from "../models/products";
 import { productIdExists } from "../helpers/dbValidations";
 
-const mapImagePath = (file?: Express.Multer.File, fallback?: string): string => {
-  if (file) {
-    return `/uploads/${file.filename}`;
+const parseJsonArray = (value: unknown): string[] => {
+  if (!value) return [];
+
+  if (Array.isArray(value)) {
+    return value.map((item) => String(item).trim()).filter(Boolean);
   }
 
-  return fallback?.trim() ?? "";
+  if (typeof value === "string") {
+    try {
+      const parsed = JSON.parse(value);
+      if (Array.isArray(parsed)) {
+        return parsed.map((item) => String(item).trim()).filter(Boolean);
+      }
+    } catch {
+      if (value.trim()) {
+        return [value.trim()];
+      }
+    }
+  }
+
+  return [];
+};
+
+const collectImages = (
+  req: Request,
+  fallback: string[] = []
+): string[] => {
+  const files = Array.isArray(req.files)
+    ? (req.files as Express.Multer.File[])
+    : [];
+  const uploaded = files.map((file) => `/uploads/${file.filename}`);
+  const urlList = parseJsonArray(req.body.imageUrls);
+
+  const merged = [...fallback, ...uploaded, ...urlList].filter(Boolean);
+
+  return Array.from(new Set(merged));
 };
 
 export const getProducts = async (
@@ -52,25 +82,25 @@ export const createProduct = async (
   const {
     title,
     description,
-    img,
     price,
     category,
     stock = 0,
     recommended = false,
   } = req.body;
 
-  const file = req.file as Express.Multer.File | undefined;
-  const imagePath = mapImagePath(file, img);
+  const images = collectImages(req);
 
-  if (!imagePath) {
-    res.status(400).json({ msg: "Debes adjuntar una imagen o URL" });
+  if (!images.length) {
+    res.status(400).json({
+      msg: "Debes adjuntar al menos una imagen o proporcionar URLs válidas",
+    });
     return;
   }
 
   const newProduct = new Product({
     title: title?.trim(),
     description: description?.trim(),
-    img: imagePath,
+    images,
     price: Number(price),
     category,
     stock: Number(stock),
@@ -93,10 +123,15 @@ export const updateProduct = async (
 
   await productIdExists(id);
 
-  const file = req.file as Express.Multer.File | undefined;
-  if (file) {
-    updates.img = mapImagePath(file);
+  const existingImages = parseJsonArray(req.body.existingImages);
+  const images = collectImages(req, existingImages);
+  if (!images.length) {
+    res
+      .status(400)
+      .json({ msg: "El producto debe conservar al menos una imagen válida" });
+    return;
   }
+  updates.images = images;
 
   if (updates.price !== undefined) {
     updates.price = Number(updates.price);
@@ -110,6 +145,9 @@ export const updateProduct = async (
     updates.recommended =
       updates.recommended === "true" || updates.recommended === true;
   }
+
+  delete updates.imageUrls;
+  delete updates.existingImages;
 
   const updatedProduct = await Product.findByIdAndUpdate(id, updates, {
     new: true,

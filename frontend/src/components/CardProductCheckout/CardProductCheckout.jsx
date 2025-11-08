@@ -1,51 +1,52 @@
 import { useDispatch } from 'react-redux'
-import { formatPrice } from '../../utils'
+import { formatPrice, resolveImageSrc } from '../../utils'
 import { BsPlusLg } from 'react-icons/bs'
 import { FaMinus } from 'react-icons/fa'
+import { IoMdTrash } from 'react-icons/io'
 import { addToCart, removeFromCart } from '../../redux/cart/cartSlice'
-
 import Count from '../UI/Count/Count'
 import Increase from '../UI/Increase/Increase'
-
 import {
 	CardContainerStyled,
 	CardInfoStyled,
-	PriceStyled,
+	ImageWrapper,
 	ProductTitleStyled,
-	TextStyled,
-	QuantityContainerStyled,
+	PriceStyled,
+	ActionsRow,
 } from './CardProductCheckoutStyles'
-import { IoMdTrash } from 'react-icons/io'
 
-const CardProductCheckout = ({ id, img, title, price, quantity, desc }) => {
+const CardProductCheckout = ({ id, img, title, price, quantity }) => {
 	const dispatch = useDispatch()
+	const cover = resolveImageSrc(img)
 
 	return (
 		<CardContainerStyled>
-			<img src={img} alt={title} />
+			<ImageWrapper>
+				<img src={cover} alt={title} />
+			</ImageWrapper>
 			<CardInfoStyled>
 				<ProductTitleStyled>{title}</ProductTitleStyled>
-				<TextStyled>{desc}</TextStyled>
 				<PriceStyled>{formatPrice(price)}</PriceStyled>
+				<ActionsRow>
+					<Increase
+						bgColor="var(--btn-gradient-secondary)"
+						onClick={() => dispatch(removeFromCart(id))}
+					>
+						{quantity === 1 ? <IoMdTrash /> : <FaMinus />}
+					</Increase>
+					<Count>{quantity}</Count>
+					<Increase
+						onClick={() =>
+							dispatch(addToCart({ id, img: cover, title, price }))
+						}
+					>
+						<BsPlusLg />
+					</Increase>
+				</ActionsRow>
 			</CardInfoStyled>
-			<QuantityContainerStyled>
-				<Increase
-					bgColor="var(--btn-gradient-secondary)"
-					onClick={() => dispatch(removeFromCart(id))}
-				>
-					{quantity === 1 ? <IoMdTrash /> : <FaMinus />}
-				</Increase>
-				<Count>{quantity}</Count>
-				<Increase
-					onClick={() =>
-						dispatch(addToCart({ id, img, title, price, quantity, desc }))
-					}
-				>
-					<BsPlusLg />
-				</Increase>
-			</QuantityContainerStyled>
 		</CardContainerStyled>
 	)
 }
 
 export default CardProductCheckout
+

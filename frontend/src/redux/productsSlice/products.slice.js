@@ -7,7 +7,7 @@ export const fetchProducts = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(`${BASE_URL}products`);
-      return response.data.data; 
+      return response.data.data;
     } catch (error) {
       const message =
         error.response?.data?.msg || "No se pudieron cargar los productos";
@@ -24,6 +24,37 @@ const INITIAL_STATE = {
   error: null,
 };
 
+const normalizeProducts = (data = []) =>
+  data.map((product) => {
+    const imagesArray = Array.isArray(product.images)
+      ? product.images.filter(Boolean)
+      : [];
+
+    const fallbackImage = product.img ? [product.img] : [];
+    const images = imagesArray.length ? imagesArray : fallbackImage;
+
+    const descriptionText = product.description || product.desc || "";
+
+    return {
+      ...product,
+      images,
+      img: images[0] || "",
+      desc: descriptionText,
+      description: descriptionText,
+    };
+  });
+
+const groupByCategory = (products = []) => {
+  return products.reduce((acc, product) => {
+    const category = product.category || "Others";
+    if (!acc[category]) {
+      acc[category] = [];
+    }
+    acc[category].push(product);
+    return acc;
+  }, {});
+};
+
 const productsSlice = createSlice({
   name: "products",
   initialState: INITIAL_STATE,
@@ -36,16 +67,10 @@ const productsSlice = createSlice({
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.products = action.payload;
-        state.totalProducts = action.payload.length;
-        state.groupedProducts = action.payload.reduce((acc, product) => {
-          const category = product.category || "Otros";
-          if (!acc[category]) {
-            acc[category] = [];
-          }
-          acc[category].push(product);
-          return acc;
-        }, {});
+        const normalized = normalizeProducts(action.payload || []);
+        state.products = normalized;
+        state.totalProducts = normalized.length;
+        state.groupedProducts = groupByCategory(normalized);
       })
       .addCase(fetchProducts.rejected, (state, action) => {
         state.status = "failed";

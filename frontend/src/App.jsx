@@ -9,22 +9,24 @@ import Navbar from './components/Navbar/Navbar'
 import { Toaster } from 'sonner'
 
 function App() {
-  const dispatch = useDispatch()
+	const dispatch = useDispatch()
 
-  useEffect(() => {
-    dispatch(fetchProducts())
-  }, [dispatch])
+	useEffect(() => {
+		dispatch(fetchProducts())
+	}, [dispatch])
 
-  return (
-    <>
-      <Layout>
-        <Toaster richColors />
-        <Navbar />
-        <Routes />
-        <Footer />
-      </Layout>
-    </>
-  )
+	return (
+		<div className="AppRoot">
+			<Layout>
+				<Toaster richColors />
+				<Navbar />
+				<main className="AppContent">
+					<Routes />
+				</main>
+				<Footer />
+			</Layout>
+		</div>
+	)
 }
 
 export default App

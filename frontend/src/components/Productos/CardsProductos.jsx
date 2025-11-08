@@ -37,14 +37,15 @@ const CardsProductos = () => {
 				{Object.entries(productsByCategory).map(([category, items = []]) =>
 					items.map((item, index) => {
 						const shouldRender = selectedCategory || renderedCount < limit
-						renderedCount += 1
 
 						if (!shouldRender) {
 							return null
 						}
 
+						renderedCount += 1
+
 						const key = item._id || item.id || `${category}-${index}`
-						return <CardProducto key={key} {...item} />
+						return <CardProducto key={key} {...item} productId={item._id || item.id} />
 					})
 				)}
 			</ProductosContainer>

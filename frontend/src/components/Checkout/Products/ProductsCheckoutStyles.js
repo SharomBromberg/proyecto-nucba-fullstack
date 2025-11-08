@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 import { breakpoints } from "../../UI/Breakpoints/breakpoints.js";
 
 export const ProductosContainerStyled = styled.div`

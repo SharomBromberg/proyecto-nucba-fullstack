@@ -8,6 +8,7 @@ import MisOrdenes from '../pages/MisOrdenes/MisOrdenes'
 import PageNotFound from '../pages/PageNotFound/PageNotFound'
 import Register from '../pages/Register/Register'
 import Resumen from '../pages/Resumen/Resumen'
+import ProductDetail from '../pages/ProductDetail/ProductDetail'
 import ProtectedRoute from '../components/ProtectedRoute/ProtectedRoute'
 import AdminRoute from '../components/ProtectedRoute/AdminRoute'
 import AdminProducts from '../pages/AdminProducts/AdminProducts'
@@ -21,6 +22,7 @@ function Routes() {
 			<Route path="/mis-ordenes" element={<MisOrdenes />} />
 			<Route path="/felicitaciones" element={<Felicitaciones />} />
 			<Route path="/resumen/:orderId" element={<Resumen />} />
+			<Route path="/producto/:productId" element={<ProductDetail />} />
 			<Route
 				path="/admin/productos"
 				element={

@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import { breakpoints } from '../UI/Breakpoints/breakpoints.js' // Importa el objeto breakpoints
 
 export const FooterContainerStyled = styled.footer`
+	position: relative;
 	height: 6.25rem;
 	background: linear-gradient(
 		135deg,
@@ -14,9 +15,10 @@ export const FooterContainerStyled = styled.footer`
 		rgba(8, 15, 32, 1) 75%,
 		rgba(6, 11, 25, 1) 90%
 	);
-	place-content: center;
+	display: flex;
 	justify-content: center;
 	align-items: center;
+	margin-top: auto;
 
 	p span {
 		font-weight: 800;
@@ -30,4 +32,15 @@ export const FooterContainerStyled = styled.footer`
 	}
 `
 
-export const LinksContainerStyled = styled.div``
+export const LinksContainerStyled = styled.div`
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	color: #fff;
+
+	a {
+		color: inherit;
+		text-decoration: none;
+		font-weight: 600;
+	}
+`

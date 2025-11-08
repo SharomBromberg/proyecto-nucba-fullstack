@@ -62,8 +62,8 @@ export const Form = styled(FormikForm)`
 `;
 
 export const ButtonStyled = styled.button`
-  align-self: center; /* Center button horizontally */
-  margin-top: auto; /* Push the button to the bottom */
+  align-self: center; 
+  margin-top: auto;
   padding: 1rem 2rem;
   border: none;
   border-radius: 0.5rem;

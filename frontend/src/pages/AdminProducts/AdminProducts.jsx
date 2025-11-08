@@ -26,7 +26,8 @@ import {
 	ProductList,
 	ProductsHeader,
 	ProductsPanel,
-	PreviewImage,
+	ImagesPreviewGrid,
+	PreviewThumb,
 	StyledForm,
 	UploadField,
 } from './AdminProductsStyles'
@@ -38,7 +39,7 @@ const INITIAL_FORM_STATE = {
 	category: categories[0]?.category ?? '',
 	stock: '0',
 	recommended: false,
-	img: '',
+	imageUrls: '',
 }
 
 const AdminProducts = () => {
@@ -49,8 +50,9 @@ const AdminProducts = () => {
 	const [saving, setSaving] = useState(false)
 	const [formValues, setFormValues] = useState(INITIAL_FORM_STATE)
 	const [editingId, setEditingId] = useState(null)
-	const [selectedFile, setSelectedFile] = useState(null)
-	const [preview, setPreview] = useState('')
+	const [selectedFiles, setSelectedFiles] = useState([])
+	const [filePreviews, setFilePreviews] = useState([])
+	const [currentImages, setCurrentImages] = useState([])
 	const [categoryFilter, setCategoryFilter] = useState('Todas')
 
 	useEffect(() => {
@@ -59,9 +61,9 @@ const AdminProducts = () => {
 
 	useEffect(() => {
 		return () => {
-			if (preview) URL.revokeObjectURL(preview)
+			filePreviews.forEach((url) => URL.revokeObjectURL(url))
 		}
-	}, [preview])
+	}, [filePreviews])
 
 	const loadProducts = async () => {
 		try {
@@ -90,16 +92,32 @@ const AdminProducts = () => {
 	}
 
 	const handleFileChange = (event) => {
-		const file = event.target.files?.[0]
-		if (!file) {
-			setSelectedFile(null)
-			setPreview('')
+		const files = Array.from(event.target.files || [])
+		if (!files.length) {
+			setSelectedFiles([])
+			setFilePreviews([])
 			return
 		}
 
-		const objectUrl = URL.createObjectURL(file)
-		setSelectedFile(file)
-		setPreview(objectUrl)
+		const previews = files.map((file) => URL.createObjectURL(file))
+		setSelectedFiles(files)
+		setFilePreviews(previews)
+	}
+
+	const handleRemoveExistingImage = (image) => {
+		setCurrentImages((prev) => prev.filter((src) => src !== image))
+	}
+
+	const handleRemoveNewImage = (index) => {
+		setSelectedFiles((prev) => prev.filter((_, i) => i !== index))
+		setFilePreviews((prev) => prev.filter((_, i) => i !== index))
+	}
+
+	const parseManualUrls = (value = '') => {
+		return value
+			.split(/[\n,]/)
+			.map((item) => item.trim())
+			.filter(Boolean)
 	}
 
 	const resolveImageSrc = (imgPath) => {
@@ -114,8 +132,9 @@ const AdminProducts = () => {
 	const resetForm = () => {
 		setFormValues(INITIAL_FORM_STATE)
 		setEditingId(null)
-		setSelectedFile(null)
-		setPreview('')
+		setSelectedFiles([])
+		setFilePreviews([])
+		setCurrentImages([])
 	}
 
 	const handleEdit = (product) => {
@@ -127,10 +146,11 @@ const AdminProducts = () => {
 			category: product.category ?? categories[0]?.category ?? '',
 			stock: product.stock?.toString() ?? '0',
 			recommended: !!product.recommended,
-			img: product.img ?? '',
+			imageUrls: '',
 		})
-		setPreview(resolveImageSrc(product.img))
-		setSelectedFile(null)
+		setCurrentImages(product.images?.length ? [...product.images] : product.img ? [product.img] : [])
+		setSelectedFiles([])
+		setFilePreviews([])
 	}
 
 	const handleDelete = async (id) => {
@@ -176,11 +196,14 @@ const AdminProducts = () => {
 		formData.append('stock', formValues.stock)
 		formData.append('recommended', formValues.recommended)
 
-		if (selectedFile) {
-			formData.append('image', selectedFile)
-		} else if (formValues.img) {
-			formData.append('img', formValues.img)
+		selectedFiles.forEach((file) => formData.append('images', file))
+
+		const manualUrls = parseManualUrls(formValues.imageUrls)
+		if (manualUrls.length) {
+			formData.append('imageUrls', JSON.stringify(manualUrls))
 		}
+
+		formData.append('existingImages', JSON.stringify(currentImages))
 
 		try {
 			setSaving(true)
@@ -239,7 +262,12 @@ const AdminProducts = () => {
 						<ProductList>
 							{visibleProducts.map((product) => (
 								<ProductCard key={product._id}>
-									<img src={resolveImageSrc(product.img)} alt={product.title} />
+									<img
+										src={resolveImageSrc(
+											product.images?.[0] || product.img
+										)}
+										alt={product.title}
+									/>
 									<div>
 										<h3>{product.title}</h3>
 										<span>
@@ -338,23 +366,61 @@ const AdminProducts = () => {
 						</InlineGroup>
 
 						<label>
-							URL de imagen (opcional)
-							<input
-								type="text"
-								name="img"
-								value={formValues.img}
+							Imágenes por URL (opcional)
+							<textarea
+								name="imageUrls"
+								value={formValues.imageUrls}
 								onChange={handleChange}
-								placeholder="https://"
+								placeholder="https://ejemplo.com/imagen1.jpg, https://ejemplo.com/imagen2.png"
 							/>
 						</label>
 
 						<UploadField>
 							<label>
-								Subir archivo
-								<input type="file" accept="image/*" onChange={handleFileChange} />
+								Subir archivos
+								<input type="file" accept="image/*" multiple onChange={handleFileChange} />
 							</label>
 							<small>Formatos permitidos: JPG, PNG, WEBP. Máximo 5MB.</small>
-							{preview && <PreviewImage src={preview} alt="Vista previa" />}
+
+							{currentImages.length > 0 && (
+								<>
+									<small>Imágenes actuales</small>
+									<ImagesPreviewGrid>
+										{currentImages.map((image) => (
+											<PreviewThumb key={image}>
+												<img src={resolveImageSrc(image)} alt="Imagen actual" />
+												<button
+													type="button"
+													onClick={() => handleRemoveExistingImage(image)}
+													aria-label="Eliminar imagen actual"
+												>
+													×
+												</button>
+											</PreviewThumb>
+										))}
+									</ImagesPreviewGrid>
+								</>
+							)}
+
+							{filePreviews.length > 0 && (
+								<>
+									<small>Nuevas imágenes seleccionadas</small>
+									<ImagesPreviewGrid>
+										{filePreviews.map((preview, index) => (
+											<PreviewThumb key={preview}>
+												<img src={preview} alt={`Nueva imagen ${index + 1}`} />
+												<button
+													type="button"
+													onClick={() => handleRemoveNewImage(index)}
+													aria-label="Eliminar imagen nueva"
+												>
+													×
+												</button>
+											</PreviewThumb>
+										))}
+									</ImagesPreviewGrid>
+								</>
+							)}
 						</UploadField>
 
 						<FormActions>

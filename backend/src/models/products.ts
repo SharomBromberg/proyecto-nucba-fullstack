@@ -3,7 +3,7 @@ import { Model, Schema, model } from "mongoose";
 export interface IProduct {
   title: string;
   description: string;
-  img: string;
+  images: string[];
   price: number;
   category: string;
   stock: number;
@@ -22,9 +22,9 @@ const ProductSchema = new Schema<IProduct>(
       required: [true, "La descripción es obligatoria"],
       trim: true,
     },
-    img: {
-      type: String,
-      required: [true, "La imagen es obligatoria"],
+    images: {
+      type: [String],
+      default: [],
     },
     price: {
       type: Number,
@@ -51,6 +51,10 @@ const ProductSchema = new Schema<IProduct>(
 
 ProductSchema.methods.toJSON = function () {
   const { __v, ...product } = this.toObject();
+  if (!product.images || !product.images.length) {
+    product.images = [];
+  }
+  product.img = product.images[0] || "";
   return product;
 };
 

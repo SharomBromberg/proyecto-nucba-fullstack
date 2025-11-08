@@ -3,119 +3,77 @@ import { breakpoints } from "../UI/Breakpoints/breakpoints.js";
 
 export const CardContainerStyled = styled.div`
   display: flex;
-  justify-content: space-between;
   align-items: center;
   gap: 1rem;
-  width: 90%;
-  background: linear-gradient(145deg, #b3c7ff, #5a6eeb);
-  padding: 1rem;
-  border-radius: 0.5rem;
-
-  & img {
-    width: 5rem; /* 80px */
-    height: 5rem;
-    border-radius: 1rem; /* 16px */
-    object-fit: cover;
-  }
-
-  @media (max-width: ${breakpoints.desktop}) {
-    padding: 0.75rem;
-    gap: 0.75rem;
-    & img {
-      width: 4.375rem; /* 70px */
-      height: 4.375rem;
-    }
-  }
+  width: 100%;
+  background: linear-gradient(145deg, rgba(30, 30, 46, 0.9), rgba(47, 9, 54, 0.9));
+  padding: 1rem 1.25rem;
+  border-radius: 1rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
 
   @media (max-width: ${breakpoints.tablet}) {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
+  }
+`;
+
+export const ImageWrapper = styled.div`
+  width: 5rem;
+  height: 5rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
     width: 100%;
-    & img {
-      width: 3.75rem; /* 60px */
-      height: 3.75rem;
-    }
+    height: 100%;
+    object-fit: contain;
+    border-radius: 1rem;
   }
 
   @media (max-width: ${breakpoints.mobile}) {
-    padding: 0.5rem;
-    & img {
-      width: 3.125rem; /* 50px */
-      height: 3.125rem;
-    }
+    width: 4rem;
+    height: 4rem;
   }
 `;
 
 export const CardInfoStyled = styled.div`
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
-  width: 15rem; /* 240px */
-
-  @media (max-width: ${breakpoints.tablet}) {
-    width: 100%;
-  }
+  gap: 0.4rem;
 `;
 
 export const ProductTitleStyled = styled.h3`
   margin: 0;
-  margin-bottom: 0.125rem; /* 2px */
-  font-weight: 500;
-  font-size: 1.2rem;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #fff;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 
-  @media (max-width: ${breakpoints.tablet}) {
+  @media (max-width: ${breakpoints.mobile}) {
     font-size: 1rem;
-  }
-
-  @media (max-width: ${breakpoints.mobile}) {
-    font-size: 0.9rem;
-  }
-`;
-
-export const TextStyled = styled.h3`
-  margin: 0;
-  color: #666;
-  font-size: 1rem;
-
-  @media (max-width: ${breakpoints.tablet}) {
-    font-size: 0.9rem;
-  }
-
-  @media (max-width: ${breakpoints.mobile}) {
-    font-size: 0.8rem;
   }
 `;
 
 export const PriceStyled = styled.span`
   font-weight: 700;
   font-size: 1rem;
-  line-height: 2rem;
   background: var(--btn-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-
-  @media (max-width: ${breakpoints.tablet}) {
-    font-size: 0.9rem;
-    line-height: 1.8rem;
-  }
-
-  @media (max-width: ${breakpoints.mobile}) {
-    font-size: 0.8rem;
-    line-height: 1.6rem;
-  }
 `;
 
-export const QuantityContainerStyled = styled.span`
+export const ActionsRow = styled.div`
   display: flex;
   align-items: center;
-
-  @media (max-width: ${breakpoints.tablet}) {
-    justify-content: space-between;
-    width: 100%;
-  }
+  gap: 0.5rem;
 
   @media (max-width: ${breakpoints.mobile}) {
-    flex-direction: column;
-    gap: 0.5rem;
+    flex-wrap: wrap;
   }
 `;
