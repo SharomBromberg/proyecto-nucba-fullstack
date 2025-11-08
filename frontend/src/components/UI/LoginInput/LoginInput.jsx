@@ -14,7 +14,7 @@ const LoginInput = ({ name, type, placeholder }) => {
 						type={type}
 						placeholder={placeholder}
 						{...field}
-						isError={errors[field.name] && touched[field.name]}
+						$isError={Boolean(errors[field.name] && touched[field.name])}
 					/>
 
 					<ErrorMessage name={field.name}>

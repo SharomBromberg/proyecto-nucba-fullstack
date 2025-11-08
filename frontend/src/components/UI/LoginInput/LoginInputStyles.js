@@ -11,7 +11,7 @@ export const LoginInputStyled = styled.input`
   color: var(--dark-text, #333); /* Texto oscuro */
   background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco semitransparente */
   border-radius: 15px;
-  border: ${({ isError }) => (isError ? '1px solid #fb103d ' : 'none')};
+  border: ${({ $isError }) => ($isError ? '1px solid #fb103d ' : 'none')};
   outline: none;
   caret-color: var(--dark-text, #333); /* Cursor oscuro */
 

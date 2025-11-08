@@ -27,8 +27,8 @@ Desarrollé el backend completo de mi e‑commerce, tecsisman, usando **Express 
    Agregué funcionalidades de mailer por si en algun futuro lo llego a necesitar.
 
 ## Accesos y URLs
-- **Frontend (Vercel):** `https://mi-front.vercel.app`
-- **Backend deployado:** `https://mi-api.onrender.com`
+- **Frontend (Vercel):** `https://proyecto-nucba-fullstack.vercel.app/`
+- **Backend deployado:** ` `
 - **Backend local:** `http://localhost:4000`
 
 ### Cuentas de prueba
@@ -40,31 +40,32 @@ Desarrollé el backend completo de mi e‑commerce, tecsisman, usando **Express 
 >para hashear la contraseña utilicé el siguiente comando: node -e "const bcrypt=require('bcryptjs'); const hash=bcrypt.hashSync('W3B5173_4DM1N_K3Y', bcrypt.genSaltSync()); console.log(hash)", ese hash lo copié y pegué en mongoDBcompass
 
 ## Variables de entorno necesarias
+**Con mailer hice pruebas desde un correo personal, por tal razón eso queda a libertad de quien quiera probar la app con otras cuentas**
 Guardo todo en `backend/.env`:
 ```
 PORT=4000
 DB_URL=mongodb+srv://...
-JWT_SECRET=...
+JWT_SECRET=MY_P4G3_53CR37_K3Y
 JWT_EXPIRES_IN=4h
-ADMIN_KEY=...
+ADMIN_KEY=W3B5173_4DM1N_K3Y
 CLAVESECRETA=...
 KEYFORADMIN=...
 MAILER_USER=...
 MAILER_PASS=...
-MAILER_FROM="
-(en el archivo .env dejo unos comentarios, de variables opcionales)
+MAILER_FROM="tecsismanstore Store <tecsismancol@gmail.com
+
 ```
 `CLAVESECRETA` y `KEYFORADMIN` me permiten generar administradores rápidamente desde Postman durante las pruebas.
 ## Scripts útiles
-- `npm run dev` - ejecuta el servidor con ts-node-dev y recarga en caliente.
+- `npm run dev` - ejecuta el servidor con ts-node-dev.
 - `npm run build` - transpila a JavaScript en `dist/`.
-- `npm start` - levanta la build compilada.
+- `npm start` - corre la build compilada.
 ## Cómo correrlo en local
 1. `cd backend`
 2. `npm install`
-3. Crea `.env` con las variables anteriores (necesitas un cluster de Mongo y credenciales del mailer).
+3. Si quieren cambiar algo deben modificar`.env` con las variables anteriores además de necesitar un cluster de mongo y las credenciales de mailer.
 4. `npm run dev` para arrancar en `http://localhost:4000`.
-5. Levanta el frontend con `BASE_URL=http://localhost:4000/`.
+5. El frontend se levanta con `BASE_URL=http://localhost:4000/`.
 6. Para modo producción: `npm run build && npm start`.
 ## Endpoints principales
 - `POST /auth/register` - registro de usuarios y envío de correo de verificación.
@@ -76,8 +77,5 @@ MAILER_FROM="
 - `PUT /products/:id` - actualización de datos e imágenes.
 - `DELETE /products/:id` - eliminación lógica/física según la necesidad del flujo.
 ## Integración con el frontend
-El frontend (React + Redux) consume `BASE_URL=http://localhost:4000/`. Migré cada vista para que consuma la API real, desarrollé un panel admin responsive para manejar inventario y conecté el checkout con los endpoints del carrito y usuarios.
-## Próximos pasos
-- Documentar los endpoints con Swagger/Markdown.
-- Deployar el backend (Render/Railway) y enlazarlo con el front en Vercel.
-- Agregar testing básico (Jest + supertest) para auth y productos.
+El frontend (React + Redux) consume `BASE_URL=http://localhost:4000/`. Migré cada vista para que consuma la API real, desarrollé un panel admin responsivo, centrandome en mobile first para manejar inventario y conecté el checkout con los endpoints del carrito y usuarios.
+

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchProducts } from '../../redux/productsSlice/products.slice'
-import { addToCart } from '../../redux/cart/cartSlice'
+import { addToCart, setHiddenCart } from '../../redux/cart/cartSlice'
 import { formatPrice, resolveImageSrc } from '../../utils'
 import Button from '../../components/UI/Button/Button'
 import {
@@ -57,6 +57,7 @@ const ProductDetail = () => {
 
 	const handleAddToCart = () => {
 		dispatch(addToCart({ ...product, desc: description, img: galleryImages[0] }))
+		dispatch(setHiddenCart(false))
 		toast.success('Producto agregado al carrito')
 	}
 

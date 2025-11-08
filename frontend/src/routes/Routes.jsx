@@ -12,6 +12,7 @@ import ProductDetail from '../pages/ProductDetail/ProductDetail'
 import ProtectedRoute from '../components/ProtectedRoute/ProtectedRoute'
 import AdminRoute from '../components/ProtectedRoute/AdminRoute'
 import AdminProducts from '../pages/AdminProducts/AdminProducts'
+import VerifyAccount from '../pages/VerifyAccount/VerifyAccount'
 
 function Routes() {
 	return (
@@ -19,6 +20,7 @@ function Routes() {
 			<Route path="/" element={<Home />} />
 			<Route path="/login" element={<Login />} />
 			<Route path="/register" element={<Register />} />
+			<Route path="/verify" element={<VerifyAccount />} />
 			<Route path="/mis-ordenes" element={<MisOrdenes />} />
 			<Route path="/felicitaciones" element={<Felicitaciones />} />
 			<Route path="/resumen/:orderId" element={<Resumen />} />

@@ -1,4 +1,5 @@
 import { Formik } from 'formik'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 import LoginInput from '../../components/UI/LoginInput/LoginInput'
 import Submit from '../../components/UI/Submit/Submit'
@@ -7,14 +8,11 @@ import { Form, LoginContainerStyled, LoginEmailStyled } from './RegisterStyles'
 import { registerInitialValues } from '../../formik/initialValues'
 import { registerValidationSchema } from '../../formik/validationSchema'
 import { createUser } from '../../axios/axios-user'
-import { useDispatch } from 'react-redux'
-import { setCurrentUser } from '../../redux/user/userSlice'
 import useRedirect from '../../hooks/useRedirect'
-import { useLocation } from 'react-router-dom'
 
 const Register = () => {
 	const { state } = useLocation()
-	const dispatch = useDispatch()
+	const navigate = useNavigate()
 	useRedirect(state?.redirectedFromCheckout ? '/checkout' : '/')
 	return (
 		<LoginContainerStyled>
@@ -30,7 +28,12 @@ const Register = () => {
 					)
 					actions.resetForm()
 					if (user) {
-						dispatch(setCurrentUser({ ...user.usuario }))
+						navigate('/verify', {
+							state: {
+								email: values.email,
+								redirectedFromCheckout: state?.redirectedFromCheckout,
+							},
+						})
 					}
 				}}
 			>

@@ -6,7 +6,7 @@ import type { StringValue } from "ms";
 
 import User from "../models/users";
 import { ROLES } from "../helpers/constants";
-import { sendEmail } from "../mailer/mailer";
+import { sendVerificationEmail } from "../mailer/mailer";
 import { AuthRequest } from "../middlewares/validateJWT";
 
 const MS_VALUE_REGEX =
@@ -32,7 +32,7 @@ const generateToken = (uid: string): string => {
   const rawSecret = process.env.JWT_SECRET;
 
   if (!rawSecret) {
-    throw new Error("JWT_SECRET no está definido");
+    throw new Error("JWT_SECRET no esta definido");
   }
 
   const secret: Secret = rawSecret;
@@ -57,23 +57,24 @@ export const registerUser = async (
   }
 
   const existingUser = await User.findOne({ email: normalizedEmail });
+  const salt = bcrypt.genSaltSync();
+  const hashedPassword = bcrypt.hashSync(password, salt);
 
   if (existingUser) {
     if (existingUser.verified) {
-      res.status(400).json({ msg: "El correo ya está registrado" });
+      res.status(400).json({ msg: "El correo ya esta registrado" });
       return;
     }
 
     existingUser.name = finalName;
-    const salt = bcrypt.genSaltSync();
-    existingUser.password = bcrypt.hashSync(password, salt);
+    existingUser.password = hashedPassword;
     existingUser.code = randomstring.generate(6);
     await existingUser.save();
-    await sendEmail(normalizedEmail, existingUser.code as string);
+    await sendVerificationEmail(normalizedEmail, existingUser.code as string);
 
     res.status(200).json({
       usuario: existingUser,
-      msg: "Ya estabas registrado, reenviamos el código a tu correo",
+      msg: "Ya estabas registrado, reenviamos el codigo a tu correo",
     });
     return;
   }
@@ -81,12 +82,9 @@ export const registerUser = async (
   const newUser = new User({
     name: finalName,
     email: normalizedEmail,
-    password,
+    password: hashedPassword,
     role: ROLES.user,
   });
-
-  const salt = bcrypt.genSaltSync();
-  newUser.password = bcrypt.hashSync(password, salt);
 
   const adminKeyHeader = req.header("admin-key");
   if (adminKeyHeader && adminKeyHeader === process.env.ADMIN_KEY) {
@@ -94,15 +92,54 @@ export const registerUser = async (
   }
 
   newUser.code = randomstring.generate(6);
-  await newUser.save();
-  await sendEmail(normalizedEmail, newUser.code as string);
 
-  res
-    .status(201)
-    .json({
+  try {
+    await newUser.save();
+    await sendVerificationEmail(normalizedEmail, newUser.code as string);
+
+    res.status(201).json({
       usuario: newUser,
       msg: "Usuario creado, revisa tu correo para validar la cuenta",
     });
+    return;
+  } catch (error) {
+    const isDuplicateKeyError =
+      typeof error === "object" &&
+      error !== null &&
+      "code" in error &&
+      (error as { code?: number }).code === 11000;
+
+    if (isDuplicateKeyError) {
+      const duplicatedUser = await User.findOne({ email: normalizedEmail });
+
+      if (duplicatedUser) {
+        if (duplicatedUser.verified) {
+          res.status(400).json({ msg: "El correo ya esta registrado" });
+          return;
+        }
+
+        duplicatedUser.name = finalName;
+        duplicatedUser.password = hashedPassword;
+        duplicatedUser.code = randomstring.generate(6);
+        await duplicatedUser.save();
+        await sendVerificationEmail(
+          normalizedEmail,
+          duplicatedUser.code as string
+        );
+
+        res.status(200).json({
+          usuario: duplicatedUser,
+          msg: "Ya estabas registrado, reenviamos el codigo a tu correo",
+        });
+        return;
+      }
+    }
+
+    console.error("Error al crear el usuario", error);
+    res.status(500).json({
+      msg: "No se pudo crear el usuario, intenta nuevamente en unos minutos",
+    });
+  }
 };
 
 export const verifyAccount = async (
@@ -120,7 +157,7 @@ export const verifyAccount = async (
   }
 
   if (user.code !== code) {
-    res.status(400).json({ msg: "El código ingresado no es válido" });
+    res.status(400).json({ msg: "El codigo ingresado no es valido" });
     return;
   }
 
@@ -130,7 +167,7 @@ export const verifyAccount = async (
 
   const token = generateToken(user.id);
 
-  res.json({ usuario: user, token, msg: "Cuenta verificada con éxito" });
+  res.json({ usuario: user, token, msg: "Cuenta verificada con exito" });
 };
 
 export const loginUser = async (req: Request, res: Response): Promise<void> => {
@@ -140,7 +177,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
   const user = await User.findOne({ email: normalizedEmail });
 
   if (!user) {
-    res.status(400).json({ msg: "El correo o la contraseña no son válidos" });
+    res.status(400).json({ msg: "El correo o la contrasena no son validos" });
     return;
   }
 
@@ -154,13 +191,13 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
   const isValidPassword = bcrypt.compareSync(password, user.password);
 
   if (!isValidPassword) {
-    res.status(400).json({ msg: "El correo o la contraseña no son válidos" });
+    res.status(400).json({ msg: "El correo o la contrasena no son validos" });
     return;
   }
 
   const token = generateToken(user.id);
 
-  res.json({ usuario: user, token, msg: "Inicio de sesión correcto" });
+  res.json({ usuario: user, token, msg: "Inicio de sesion correcto" });
 };
 
 export const renewToken = async (

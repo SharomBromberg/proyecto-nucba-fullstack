@@ -23,3 +23,13 @@ export const loginValidationSchema = Yup.object({
     .matches(regEmail, 'Email no valido')
     .required('Campo requerido'),
 })
+
+export const verifyValidationSchema = Yup.object({
+  email: Yup.string()
+    .matches(regEmail, 'Email no valido')
+    .required('Campo requerido'),
+  code: Yup.string()
+    .min(4, 'Mínimo 4 caracteres')
+    .max(6, 'Máximo 6 caracteres')
+    .required('Campo requerido'),
+})

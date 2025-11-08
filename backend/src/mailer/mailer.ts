@@ -1,33 +1,106 @@
-import nodemailer from "nodemailer";
+import nodemailer, { SendMailOptions } from "nodemailer";
 
 const mailUser = process.env.MAILER_USER;
 const mailPass = process.env.MAILER_PASS;
-const mailFrom = process.env.MAILER_FROM ?? "Tecsisman ";
+const mailFrom =
+  process.env.MAILER_FROM ?? "Tecsisman Store <no-reply@tecsisman.com>";
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: mailUser,
-    pass: mailPass,
-  },
-});
+const transporter =
+  mailUser && mailPass
+    ? nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: mailUser,
+          pass: mailPass,
+        },
+      })
+    : null;
 
-export const sendEmail = async (to: string, code: string): Promise<void> => {
-  if (!mailUser || !mailPass) {
+const sendMail = async (options: SendMailOptions): Promise<void> => {
+  if (!transporter) {
     console.warn(
-      "No se configuró el servicio de correo, no se pudo enviar el email"
+      "El servicio de correo no esta configurado. Define MAILER_USER y MAILER_PASS para habilitarlo."
     );
     return;
   }
 
-  const mailOptions = {
+  await transporter.sendMail({
     from: mailFrom,
-    to,
-    subject: "Código de verificación",
-    text: `Hola, tu código de verificación es: ${code}`,
-    html: `<p>Hola 👋</p><p>Tu código de verificación es <strong>${code}</strong>.</p>`,
-  };
+    ...options,
+  });
+};
 
-  await transporter.sendMail(mailOptions);
-  console.log("Correo electrónico enviado");
+export const sendVerificationEmail = async (
+  to: string,
+  code: string
+): Promise<void> => {
+  const subject = "Codigo de verificacion";
+  const text = `Hola, tu codigo de verificacion es: ${code}`;
+  const html = `
+    <p>Hola!</p>
+    <p>Gracias por registrarte en <strong>Tescsisman</strong>.</p>
+    <p>Tu codigo de verificacion es <strong>${code}</strong>.</p>
+    <p>Ingresalo en la app para activar tu cuenta.</p>
+  `;
+
+  await sendMail({ to, subject, text, html });
+};
+
+interface OrderMailItem {
+  title: string;
+  price: number | string;
+  quantity: number;
+}
+
+interface OrderMailPayload {
+  orderId: string;
+  subtotal: number | string;
+  shippingCost: number | string;
+  total: number | string;
+  items: OrderMailItem[];
+}
+
+const formatCurrency = (value: number | string): string => {
+  const numericValue =
+    typeof value === "number" ? value : Number((value ?? "").toString());
+
+  if (Number.isFinite(numericValue)) {
+    return numericValue.toFixed(2);
+  }
+
+  return "0.00";
+};
+
+export const sendOrderConfirmationEmail = async (
+  to: string,
+  payload: OrderMailPayload
+): Promise<void> => {
+  const subject = "Tu pedido fue exitoso";
+  const itemsList = payload.items
+    .map(
+      (item) =>
+        `<li><strong>${item.title}</strong> x${item.quantity} - $${formatCurrency(
+          item.price
+        )}</li>`
+    )
+    .join("");
+
+  const html = `
+    <p>Buenas noticias!</p>
+    <p>Tu pedido <strong>#${payload.orderId}</strong> fue recibido correctamente.</p>
+    <p>Detalle:</p>
+    <ul>${itemsList}</ul>
+    <p>Subtotal: <strong>$${formatCurrency(payload.subtotal)}</strong></p>
+    <p>Costo de envio: <strong>$${formatCurrency(payload.shippingCost)}</strong></p>
+    <p>Total: <strong>$${formatCurrency(payload.total)}</strong></p>
+    <p>Te avisaremos cuando este en camino.</p>
+    <p>Gracias por comprar en Tescsisman.</p>
+    <p>Saludos,<br />Equipo de Tescsisman</p>
+  `;
+
+  const text = `Tu pedido #${payload.orderId} fue exitoso. Total: $${formatCurrency(
+    payload.total
+  )}`;
+
+  await sendMail({ to, subject, text, html });
 };

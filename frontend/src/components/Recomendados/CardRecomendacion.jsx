@@ -11,7 +11,7 @@ import {
 	CardTitle,
 	InfoCard,
 } from './CardsRecomendacionStyled'
-import { addToCart } from '../../redux/cart/cartSlice'
+import { addToCart, setHiddenCart } from '../../redux/cart/cartSlice'
 import { toast } from 'sonner'
 
 const CardRecomendacion = ({ title, img, price, desc, id }) => {
@@ -29,6 +29,7 @@ const CardRecomendacion = ({ title, img, price, desc, id }) => {
 				<Button
 					onClick={() => {
 						dispatch(addToCart({ title, img, price, desc, id }))
+						dispatch(setHiddenCart(false))
 						toast.success('Producto agregado')
 					}}
 				>

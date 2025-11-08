@@ -35,7 +35,7 @@ const resolveExpiresIn = (raw) => {
 const generateToken = (uid) => {
     const rawSecret = process.env.JWT_SECRET;
     if (!rawSecret) {
-        throw new Error("JWT_SECRET no está definido");
+        throw new Error("JWT_SECRET no esta definido");
     }
     const secret = rawSecret;
     const expiresInValue = resolveExpiresIn(process.env.JWT_EXPIRES_IN);
@@ -52,44 +52,73 @@ const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         return;
     }
     const existingUser = yield users_1.default.findOne({ email: normalizedEmail });
+    const salt = bcryptjs_1.default.genSaltSync();
+    const hashedPassword = bcryptjs_1.default.hashSync(password, salt);
     if (existingUser) {
         if (existingUser.verified) {
-            res.status(400).json({ msg: "El correo ya está registrado" });
+            res.status(400).json({ msg: "El correo ya esta registrado" });
             return;
         }
         existingUser.name = finalName;
-        const salt = bcryptjs_1.default.genSaltSync();
-        existingUser.password = bcryptjs_1.default.hashSync(password, salt);
+        existingUser.password = hashedPassword;
         existingUser.code = randomstring_1.default.generate(6);
         yield existingUser.save();
-        yield (0, mailer_1.sendEmail)(normalizedEmail, existingUser.code);
+        yield (0, mailer_1.sendVerificationEmail)(normalizedEmail, existingUser.code);
         res.status(200).json({
             usuario: existingUser,
-            msg: "Ya estabas registrado, reenviamos el código a tu correo",
+            msg: "Ya estabas registrado, reenviamos el codigo a tu correo",
         });
         return;
     }
     const newUser = new users_1.default({
         name: finalName,
         email: normalizedEmail,
-        password,
+        password: hashedPassword,
         role: constants_1.ROLES.user,
     });
-    const salt = bcryptjs_1.default.genSaltSync();
-    newUser.password = bcryptjs_1.default.hashSync(password, salt);
     const adminKeyHeader = req.header("admin-key");
     if (adminKeyHeader && adminKeyHeader === process.env.ADMIN_KEY) {
         newUser.role = constants_1.ROLES.admin;
     }
     newUser.code = randomstring_1.default.generate(6);
-    yield newUser.save();
-    yield (0, mailer_1.sendEmail)(normalizedEmail, newUser.code);
-    res
-        .status(201)
-        .json({
-        usuario: newUser,
-        msg: "Usuario creado, revisa tu correo para validar la cuenta",
-    });
+    try {
+        yield newUser.save();
+        yield (0, mailer_1.sendVerificationEmail)(normalizedEmail, newUser.code);
+        res.status(201).json({
+            usuario: newUser,
+            msg: "Usuario creado, revisa tu correo para validar la cuenta",
+        });
+        return;
+    }
+    catch (error) {
+        const isDuplicateKeyError = typeof error === "object" &&
+            error !== null &&
+            "code" in error &&
+            error.code === 11000;
+        if (isDuplicateKeyError) {
+            const duplicatedUser = yield users_1.default.findOne({ email: normalizedEmail });
+            if (duplicatedUser) {
+                if (duplicatedUser.verified) {
+                    res.status(400).json({ msg: "El correo ya esta registrado" });
+                    return;
+                }
+                duplicatedUser.name = finalName;
+                duplicatedUser.password = hashedPassword;
+                duplicatedUser.code = randomstring_1.default.generate(6);
+                yield duplicatedUser.save();
+                yield (0, mailer_1.sendVerificationEmail)(normalizedEmail, duplicatedUser.code);
+                res.status(200).json({
+                    usuario: duplicatedUser,
+                    msg: "Ya estabas registrado, reenviamos el codigo a tu correo",
+                });
+                return;
+            }
+        }
+        console.error("Error al crear el usuario", error);
+        res.status(500).json({
+            msg: "No se pudo crear el usuario, intenta nuevamente en unos minutos",
+        });
+    }
 });
 exports.registerUser = registerUser;
 const verifyAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -101,14 +130,14 @@ const verifyAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         return;
     }
     if (user.code !== code) {
-        res.status(400).json({ msg: "El código ingresado no es válido" });
+        res.status(400).json({ msg: "El codigo ingresado no es valido" });
         return;
     }
     user.verified = true;
     user.code = undefined;
     yield user.save();
     const token = generateToken(user.id);
-    res.json({ usuario: user, token, msg: "Cuenta verificada con éxito" });
+    res.json({ usuario: user, token, msg: "Cuenta verificada con exito" });
 });
 exports.verifyAccount = verifyAccount;
 const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -116,7 +145,7 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const normalizedEmail = (email !== null && email !== void 0 ? email : "").trim().toLowerCase();
     const user = yield users_1.default.findOne({ email: normalizedEmail });
     if (!user) {
-        res.status(400).json({ msg: "El correo o la contraseña no son válidos" });
+        res.status(400).json({ msg: "El correo o la contrasena no son validos" });
         return;
     }
     if (!user.verified) {
@@ -127,11 +156,11 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
     const isValidPassword = bcryptjs_1.default.compareSync(password, user.password);
     if (!isValidPassword) {
-        res.status(400).json({ msg: "El correo o la contraseña no son válidos" });
+        res.status(400).json({ msg: "El correo o la contrasena no son validos" });
         return;
     }
     const token = generateToken(user.id);
-    res.json({ usuario: user, token, msg: "Inicio de sesión correcto" });
+    res.json({ usuario: user, token, msg: "Inicio de sesion correcto" });
 });
 exports.loginUser = loginUser;
 const renewToken = (req, res) => __awaiter(void 0, void 0, void 0, function* () {

@@ -15,3 +15,8 @@ export const loginInitialValues = {
   email: "",
   password: "",
 }
+
+export const verifyInitialValues = {
+  email: "",
+  code: "",
+}

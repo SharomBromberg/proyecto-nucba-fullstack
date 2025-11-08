@@ -76,9 +76,15 @@ const ModalCart = () => {
 
 							<ProductsWrapperStyled>
 								{cartItems.length > 0 ? (
-									cartItems.map((item) => (
-										<ModalCartCard key={item.id} {...item} />
-									))
+									cartItems.map((item, index) => {
+										const key =
+											item.id ??
+											item._id ??
+											item.productId ??
+											`${item.title}-${index}`
+
+										return <ModalCartCard key={key} {...item} />
+									})
 								) : (
 									<p>Tu carrito está vacío</p>
 								)}
