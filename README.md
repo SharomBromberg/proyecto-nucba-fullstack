@@ -35,7 +35,9 @@ Desarrollé el backend completo de mi e‑commerce, tecsisman, usando **Express 
 | Rol    | Email              | Contraseña        |
 | ------ | ------------------ | ----------------- |
 | Admin  | admin@store.com    | W3B5173_4DM1N_K3Y |
-| Cliente|                    |                   | pueden realizar cualquier registro como clientes y verificar
+| Cliente|                    |                   |
+
+pueden realizar cualquier registro como clientes y verificar
 > Las contraseñas están hasheadas en la base. Estas cuentas quedaron listas para QA y demostraciones. Si agrego nuevas, debo validar el correo desde el enlace que envío automáticamente.
 >para hashear la contraseña utilicé el siguiente comando: node -e "const bcrypt=require('bcryptjs'); const hash=bcrypt.hashSync('W3B5173_4DM1N_K3Y', bcrypt.genSaltSync()); console.log(hash)", ese hash lo copié y pegué en mongoDBcompass
 
