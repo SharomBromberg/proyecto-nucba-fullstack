@@ -26,13 +26,29 @@ const parseJsonArray = (value: unknown): string[] => {
   return [];
 };
 
+type MulterRequest = Request & {
+  files?:
+    | Express.Multer.File[]
+    | Record<string, Express.Multer.File | Express.Multer.File[]>;
+};
+
+const extractFiles = (req: MulterRequest): Express.Multer.File[] => {
+  if (!req.files) return [];
+
+  if (Array.isArray(req.files)) {
+    return req.files;
+  }
+
+  return Object.values(req.files).flatMap((value) =>
+    Array.isArray(value) ? value : [value]
+  );
+};
+
 const collectImages = (
-  req: Request,
+  req: MulterRequest,
   fallback: string[] = []
 ): string[] => {
-  const files = Array.isArray(req.files)
-    ? (req.files as Express.Multer.File[])
-    : [];
+  const files = extractFiles(req);
   const uploaded = files.map((file) => `/uploads/${file.filename}`);
   const urlList = parseJsonArray(req.body.imageUrls);
 
@@ -76,7 +92,7 @@ export const getProductById = async (
 };
 
 export const createProduct = async (
-  req: Request,
+  req: MulterRequest,
   res: Response
 ): Promise<void> => {
   const {
@@ -115,7 +131,7 @@ export const createProduct = async (
 };
 
 export const updateProduct = async (
-  req: Request,
+  req: MulterRequest,
   res: Response
 ): Promise<void> => {
   const { id } = req.params;

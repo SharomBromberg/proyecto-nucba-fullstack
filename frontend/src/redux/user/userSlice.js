@@ -1,11 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// initialState
 const INITIAL_STATE = {
   currentUser: null,
   hiddenMenu: true,
 };
-// slice
 
 const userSlice = createSlice({
   name: "user",
@@ -26,8 +24,6 @@ const userSlice = createSlice({
   },
 });
 
-// export actions
 export const { setCurrentUser, toggleMenuHidden } = userSlice.actions;
 
-// export reducer
-export default userSlice.reducer
+export default userSlice.reducer;

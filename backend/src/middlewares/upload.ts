@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import multer from "multer";
+import type { Request } from "express";
 
 const uploadsPath = path.resolve(__dirname, "../../uploads");
 
@@ -9,10 +10,10 @@ if (!fs.existsSync(uploadsPath)) {
 }
 
 const storage = multer.diskStorage({
-  destination: (_, __, cb) => {
+  destination: (_req: Request, _file: Express.Multer.File, cb) => {
     cb(null, uploadsPath);
   },
-  filename: (_, file, cb) => {
+  filename: (_req: Request, file: Express.Multer.File, cb) => {
     const ext = path.extname(file.originalname);
     const base = path
       .basename(file.originalname, ext)
@@ -25,7 +26,7 @@ const storage = multer.diskStorage({
 
 const allowedMimeTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 
-const fileFilter: multer.Options["fileFilter"] = (_, file, cb) => {
+const fileFilter: multer.Options["fileFilter"] = (_req, file, cb) => {
   if (allowedMimeTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
@@ -37,6 +38,6 @@ export const upload = multer({
   storage,
   fileFilter,
   limits: {
-    fileSize: 5 * 1024 * 1024, // 5MB
+    fileSize: 5 * 1024 * 1024,
   },
 });

@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 
 const mailUser = process.env.MAILER_USER;
 const mailPass = process.env.MAILER_PASS;
-const mailFrom = process.env.MAILER_FROM ?? "Nucba Store";
+const mailFrom = process.env.MAILER_FROM ?? "Tecsisman ";
 
 const transporter = nodemailer.createTransport({
   service: "gmail",

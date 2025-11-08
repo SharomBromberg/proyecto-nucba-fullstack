@@ -109,8 +109,6 @@ export const Products = products.reduce((acc, product) => {
   return acc;
 }, {});
 
-
-// Otra forma
 // const categories = [...new Set(products.map(product => product.category))]
 
 // const Products = categories.reduce((acc, category) => {
