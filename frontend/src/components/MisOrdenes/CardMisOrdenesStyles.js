@@ -3,33 +3,23 @@ import { breakpoints } from '../UI/Breakpoints/breakpoints';
 
 
 export const MisOrdenesContainerStyled = styled.div`
-  padding: 2rem;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 2rem;
-  max-width: 90rem;
+  padding: clamp(1.5rem, 2vw, 2.5rem);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(1rem, 1.5vw, 2.5rem);
+  width: min(1200px, 100%);
   margin: 0 auto;
   background: linear-gradient(135deg, #1b1b1b, #292929);
   border-radius: 1rem;
   box-shadow: 0rem 1rem 1.5rem rgba(0, 0, 0, 0.5);
-
-  @media (max-width: ${breakpoints.tablet}) {
-    padding: 1.5rem;
-    gap: 1.5rem;
-  }
-
-  @media (max-width: ${breakpoints.mobile}) {
-    padding: 1rem;
-    gap: 1rem;
-  }
 `;
 
 export const PedidoContainerStyled = styled.div`
   background: #222222;
-  width: 30rem;
   border-radius: 1rem;
   padding: 2rem;
+  width: 100%;
+  min-height: 160px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -39,17 +29,15 @@ export const PedidoContainerStyled = styled.div`
   box-shadow: 0rem 0.5rem 1rem rgba(0, 0, 0, 0.5);
 
   &:hover {
-    transform: scale(1.05);
+    transform: scale(1.02);
     box-shadow: 0rem 0.8rem 1.5rem rgba(255, 0, 84, 0.7);
   }
 
   @media (max-width: ${breakpoints.tablet}) {
-    width: 25rem;
     padding: 1.5rem;
   }
 
   @media (max-width: ${breakpoints.mobile}) {
-    width: 100%;
     padding: 1rem;
   }
 `;
