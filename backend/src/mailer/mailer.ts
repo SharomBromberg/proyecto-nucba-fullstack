@@ -1,33 +1,47 @@
-import nodemailer, { SendMailOptions } from "nodemailer";
+import { Resend, type CreateEmailOptions } from "resend";
 
-const mailUser = process.env.MAILER_USER;
-const mailPass = process.env.MAILER_PASS;
+const resendApiKey = process.env.RESEND_API_KEY;
 const mailFrom =
   process.env.MAILER_FROM ?? "Tecsisman Store <no-reply@tecsisman.com>";
+const resendClient = resendApiKey ? new Resend(resendApiKey) : null;
 
-const transporter = mailUser && mailPass
-  ? nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false,
-      auth: { user: mailUser, pass: mailPass },
-      connectionTimeout: 10000,
-    })
-  : null;
+interface MailOptions {
+  to: string | string[];
+  subject: string;
+  html?: string;
+  text?: string;
+}
 
+const buildPayload = (options: MailOptions): CreateEmailOptions => {
+  const hasHtml = typeof options.html === "string" && options.html.trim().length;
+  const hasText = typeof options.text === "string" && options.text.trim().length;
 
-const sendMail = async (options: SendMailOptions): Promise<void> => {
-  if (!transporter) {
+  if (!hasHtml && !hasText) {
+    throw new Error("Debe especificar html o text para enviar un correo.");
+  }
+
+  const payload = {
+    from: mailFrom,
+    to: options.to,
+    subject: options.subject,
+    ...(hasHtml ? { html: options.html?.trim() } : {}),
+    ...(hasText ? { text: options.text?.trim() } : {}),
+  } as CreateEmailOptions;
+
+  return payload;
+};
+
+const sendMail = async (options: MailOptions): Promise<void> => {
+  if (!resendClient) {
     console.warn(
-      "El servicio de correo no esta configurado. Define MAILER_USER y MAILER_PASS para habilitarlo."
+      "El servicio de correo no esta configurado. Define RESEND_API_KEY para habilitarlo."
     );
     return;
   }
 
-  await transporter.sendMail({
-    from: mailFrom,
-    ...options,
-  });
+  const payload = buildPayload(options);
+
+  await resendClient.emails.send(payload);
 };
 
 export const sendVerificationEmail = async (
