@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
+import { HashRouter } from 'react-router-dom'
 import App from './App.jsx'
 import { GlobalStyles } from './styles/GlobalStyles'
 import { Provider } from 'react-redux'
@@ -10,9 +10,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 	<Provider store={store}>
 		<PersistGate persistor={persistor}>
 			<GlobalStyles />
-			<BrowserRouter>
+			<HashRouter>
 				<App />
-			</BrowserRouter>
+			</HashRouter>
 		</PersistGate>
 	</Provider>
 )
