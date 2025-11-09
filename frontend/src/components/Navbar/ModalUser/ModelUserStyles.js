@@ -23,7 +23,7 @@ export const ModalContainerStyled = styled(motion.div)`
 
     &:hover {
       opacity: 90%;
-      color: #ff0054; /* Destaca en hover */
+      color: #ff0054;
     }
   }
 
@@ -49,7 +49,7 @@ export const LinkStyled = styled(Link)`
 
   &:hover {
     opacity: 90%;
-    color: #5500ff; /* Color neón al hover */
+    color: #5500ff;
   }
 `;
 

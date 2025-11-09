@@ -19,37 +19,35 @@ export const GlobalStyles = createGlobalStyle`
 
   html {
     scroll-behavior: smooth;
-    font-size: 100%; /* Default font size (16px) */
+    font-size: 100%;
 
     @media (max-width: ${breakpoints.desktop}) {
-      font-size: 90%; /* Reduce to 14.4px for desktops below 1024px */
+      font-size: 90%;
     }
 
     @media (max-width: ${breakpoints.tablet}) {
-      font-size: 85%; /* Reduce to 13.6px for tablets */
+      font-size: 85%;
     }
 
     @media (max-width: ${breakpoints.mobile}) {
-      font-size: 75%; /* Reduce to 12px for small mobile screens */
+      font-size: 75%;
     }
   }
 
   body {
     margin: 0;
     padding: 0;
-    background: #1b1b1b; /* Dark background for gamer aesthetic */
-    /* Use Inter for UI text and fallbacks for broad support */
+    background: #1b1b1b;
     font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif;
     color: white;
     -webkit-tap-highlight-color: transparent;
     overflow-x: hidden;
 
     @media (max-width: ${breakpoints.mobile}) {
-      line-height: 1.4; /* Adjust line-height for readability */
+      line-height: 1.4;
     }
   }
 
-  /* Headings use a more classic serif for a professional tone */
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Merriweather', 'Georgia', 'Times New Roman', serif;
     font-weight: 700;
@@ -94,7 +92,6 @@ export const GlobalStyles = createGlobalStyle`
     }
   }
 
-  /* Utility Classes */
   .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -117,13 +114,11 @@ export const GlobalStyles = createGlobalStyle`
     display: none !important;
   }
 
-  /* Prevent overflow for all elements */
   * {
     box-sizing: border-box;
     overflow-wrap: break-word;
   }
 
-  /* Scrollbar Styling */
   ::-webkit-scrollbar {
     width: 0.5rem;
   }

@@ -34,7 +34,6 @@ function Routes() {
 				}
 			/>
 
-			{/* <Route path="/checkout" element={<Checkout />} /> */}
 			<Route
 				path="/checkout"
 				element={

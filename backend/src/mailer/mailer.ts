@@ -40,9 +40,9 @@ const sendMail = async (options: MailOptions): Promise<void> => {
   }
 
   const payload = buildPayload(options);
-
   await resendClient.emails.send(payload);
 };
+
 
 export const sendVerificationEmail = async (
   to: string,

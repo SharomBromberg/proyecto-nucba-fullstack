@@ -8,24 +8,24 @@ export const InputContainerStyled = styled.div`
 export const LoginInputStyled = styled.input`
   width: 300px;
   padding: 1.5rem 2rem;
-  color: var(--dark-text, #333); /* Texto oscuro */
-  background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco semitransparente */
+  color: var(--dark-text, #333);
+  background-color: rgba(255, 255, 255, 0.8);
   border-radius: 15px;
   border: ${({ $isError }) => ($isError ? '1px solid #fb103d ' : 'none')};
   outline: none;
-  caret-color: var(--dark-text, #333); /* Cursor oscuro */
+  caret-color: var(--dark-text, #333);
 
   ::placeholder {
     opacity: 0.8;
-    color: var(--dark-text, #333); /* Texto de placeholder oscuro */
+    color: var(--dark-text, #333);
   }
 
-  -webkit-text-fill-color: var(--dark-text, #333); /* Texto de autofill oscuro */
+  -webkit-text-fill-color: var(--dark-text, #333);
 
   :-webkit-autofill,
   :-webkit-autofill:hover,
   :-webkit-autofill:focus {
-    -webkit-box-shadow: 0 0 0px 1000px rgba(255, 255, 255, 0.8) inset; /* Fondo de autofill blanco semitransparente */
+    -webkit-box-shadow: 0 0 0px 1000px rgba(255, 255, 255, 0.8) inset;
   }
 `;
 

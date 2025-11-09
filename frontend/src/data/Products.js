@@ -109,10 +109,3 @@ export const Products = products.reduce((acc, product) => {
   return acc;
 }, {});
 
-// const categories = [...new Set(products.map(product => product.category))]
-
-// const Products = categories.reduce((acc, category) => {
-//   acc[category] = products.filter(product => product.category === category)
-
-//   return acc
-// }, {})

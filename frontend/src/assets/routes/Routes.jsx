@@ -20,7 +20,6 @@ function Routes() {
 			<Route path="/felicitaciones" element={<Felicitaciones />} />
 			<Route path="/resumen/:orderId" element={<Resumen />} />
 
-			{/* <Route path="/checkout" element={<Checkout />} /> */}
 			<Route
 				path="/checkout"
 				element={

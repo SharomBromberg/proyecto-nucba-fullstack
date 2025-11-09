@@ -10,44 +10,40 @@ export const TextContainer = styled.div`
   h1 {
     width: 100%;
     margin: 0 auto;
-    font-size: 2rem; /* Desktop size */
-    white-space: nowrap; /* Texto en una línea para desktop */
+    font-size: 2rem;
+    white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis; /* Manejar texto muy largo */
+    text-overflow: ellipsis;
     color: #000;
   }
 
-  /* Estilo para grandes desktops */
   @media (max-width: ${breakpoints.largeDesktop}) {
     h1 {
-      font-size: 1.8rem; /* Reducir ligeramente el tamaño */
+      font-size: 1.8rem;
     }
   }
 
-  /* Estilo para desktops y tablets */
   @media (max-width: ${breakpoints.desktop}) {
     h1 {
       font-size: 1.6rem;
     }
   }
 
-  /* Estilo para tablets */
   @media (max-width: ${breakpoints.tablet}) {
     h1 {
       font-size: 1.4rem;
-      white-space: normal; /* Permitir texto en varias líneas */
+      white-space: normal;
       width: 90%;
     }
   }
 
-  /* Estilo para móviles */
   @media (max-width: ${breakpoints.mobile}) {
     width: 100%;
     margin: 0 auto;
     h1 {
-      font-size: 1rem; /* Tamaño más pequeño */
+      font-size: 1rem;
       text-align: center;
-      white-space: normal; /* Texto en múltiples líneas */
+      white-space: normal;
     }
   }
 `;

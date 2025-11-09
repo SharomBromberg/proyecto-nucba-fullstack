@@ -29,7 +29,7 @@ export const InputStyled = styled.input`
   background-color: #1a1a1d;
   outline: none;
   border: ${({ isError }) =>
-    isError ? "2px solid #fb103d" : "2px solid #4caf50"}; /* Bordes dinámicos */
+    isError ? "2px solid #fb103d" : "2px solid #4caf50"};
   border-radius: 0.5rem;
   height: 2.75rem;
   padding: 0.5rem 1rem;
