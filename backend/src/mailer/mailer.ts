@@ -5,6 +5,9 @@ const mailPass = process.env.MAILER_PASS;
 const mailFrom =
   process.env.MAILER_FROM ?? "Tecsisman Store <no-reply@tecsisman.com>";
 
+console.log("[mailer] MAILER_USER:", mailUser);
+console.log("[mailer] MAILER_PASS definido:", Boolean(mailPass));
+console.log("[mailer] MAILER_FROM:", mailFrom);
 const transporter =
   mailUser && mailPass
     ? nodemailer.createTransport({
