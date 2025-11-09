@@ -1,8 +1,10 @@
 import styled, { css } from 'styled-components'
 import { motion } from 'framer-motion'
+import { Link } from 'react-router-dom'
 import { breakpoints } from '../UI/Breakpoints/breakpoints.js'
 
-export const NavbarContainerStyled = styled.div`
+export const NavbarContainerStyled = styled.header`
+	width: 100%;
 	height: 6.25rem;
 	background: linear-gradient(
 		135deg,
@@ -16,18 +18,32 @@ export const NavbarContainerStyled = styled.div`
 		rgba(6, 11, 25, 1) 90%
 	);
 	display: flex;
-	justify-content: space-around;
+	justify-content: center;
 	align-items: center;
-	padding: 0rem 4rem;
+	padding: 0 2rem;
 	position: relative;
+	box-shadow: 0 18px 45px rgba(8, 4, 20, 0.35);
 
 	@media (max-width: ${breakpoints.tablet}) {
-		width: 100%;
+		padding: 0 1.5rem;
 	}
 
 	@media (max-width: ${breakpoints.mobile}) {
-		min-width: 100%;
-		padding: 0 1.5rem;
+		padding: 0 1.25rem;
+		height: 5.5rem;
+	}
+`
+
+export const NavbarContentStyled = styled.div`
+	width: 100%;
+	max-width: 1200px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 2rem;
+
+	@media (max-width: ${breakpoints.mobile}) {
+		gap: 1rem;
 	}
 `
 
@@ -62,6 +78,30 @@ export const CustomImageStyled = styled.img`
 	border-radius: 3.125rem;
 	cursor: pointer;
 `
+
+export const BrandLinkStyled = styled(Link)`
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	text-decoration: none;
+	color: #ffffff;
+	font-weight: 700;
+
+	@media (max-width: ${breakpoints.mobile}) {
+		gap: 0.5rem;
+	}
+`
+
+export const BrandTitleStyled = styled.span`
+	font-size: 1.3rem;
+	font-weight: 800;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+
+	@media (max-width: ${breakpoints.mobile}) {
+		font-size: 1.1rem;
+	}
+`
 export const HamburgerButton = styled.button`
 	display: none;
 	background: transparent;
@@ -80,11 +120,13 @@ export const HamburgerButton = styled.button`
 
 export const LinksContainerStyled = styled.div`
 	color: #f0f0ff;
+	flex: 1;
 	display: ${({ $isMobile, $isOpen }) =>
 		$isMobile ? ($isOpen ? 'flex' : 'none') : 'flex'};
-	justify-content: center;
+	justify-content: flex-end;
 	align-items: center;
 	gap: 2.5rem;
+	margin-left: auto;
 
 	a {
 		padding: 1rem 1.5rem;
@@ -123,6 +165,8 @@ export const LinksContainerStyled = styled.div`
 		border-radius: 0 0 1.25rem 1.25rem;
 		box-shadow: 0 18px 32px rgba(6, 4, 15, 0.8);
 		z-index: 7;
+		margin-left: 0;
+		flex: unset;
 
 		a {
 			padding: 0.5rem 1rem;
@@ -138,6 +182,39 @@ export const LinksContainerStyled = styled.div`
 			display: flex;
 			justify-content: center;
 		}
+	}
+`
+
+export const NavLinksGroupStyled = styled.div`
+	display: flex;
+	align-items: center;
+	gap: 1.5rem;
+
+	@media (max-width: ${breakpoints.tablet}) {
+		gap: 1rem;
+	}
+
+	@media (max-width: ${breakpoints.mobile}) {
+		display: contents;
+	}
+`
+
+export const NavActionsStyled = styled.div`
+	display: flex;
+	align-items: center;
+	gap: 1.5rem;
+	padding-left: 1.5rem;
+	border-left: 1px solid rgba(255, 255, 255, 0.2);
+
+	@media (max-width: ${breakpoints.tablet}) {
+		gap: 1rem;
+		padding-left: 1rem;
+	}
+
+	@media (max-width: ${breakpoints.mobile}) {
+		display: contents;
+		padding-left: 0;
+		border-left: none;
 	}
 `
 
@@ -192,6 +269,7 @@ export const UserNavStyled = styled.div`
 	@media (max-width: ${breakpoints.mobile}) {
 		width: 100%;
 		justify-content: center;
+		gap: 0.625rem;
 	}
 `
 

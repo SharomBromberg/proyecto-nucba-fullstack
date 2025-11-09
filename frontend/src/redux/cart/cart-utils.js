@@ -1,27 +1,48 @@
-export const addItemToCart = (cartItems = [], product) => {
-  const productInCart = cartItems.find((item) => item.id === product.id);
+const resolveId = (item = {}) => {
+  const { id, _id } = item;
+  const candidate = id ?? _id;
+  return candidate ? String(candidate) : "";
+};
+
+export const addItemToCart = (cartItems = [], product = {}) => {
+  const normalizedId = resolveId(product);
+
+  if (!normalizedId) {
+    return cartItems;
+  }
+
+  const productInCart = cartItems.find(
+    (item) => resolveId(item) === normalizedId
+  );
 
   if (productInCart) {
     return cartItems.map((item) =>
-      item.id === productInCart.id
+      resolveId(item) === normalizedId
         ? { ...item, quantity: item.quantity + 1 }
         : item
     );
-  } else {
-    return [...cartItems, { ...product, quantity: 1 }];
   }
+
+  return [...cartItems, { ...product, id: normalizedId, quantity: 1 }];
 };
 
-export const removeItemFromCart = (cartItems, id) => {
-  const productToRemove = cartItems.find((item) => item.id === id);
+export const removeItemFromCart = (cartItems = [], rawId) => {
+  const normalizedId = rawId ? String(rawId) : "";
+  const productToRemove = cartItems.find(
+    (item) => resolveId(item) === normalizedId
+  );
+
+  if (!productToRemove) {
+    return cartItems;
+  }
 
   if (productToRemove.quantity > 1) {
     return cartItems.map((item) =>
-      item.id === productToRemove.id
+      resolveId(item) === normalizedId
         ? { ...item, quantity: item.quantity - 1 }
         : item
     );
-  } else {
-    return cartItems.filter((item) => item.id !== productToRemove.id);
   }
+
+  return cartItems.filter((item) => resolveId(item) !== normalizedId);
 };

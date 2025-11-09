@@ -2,8 +2,8 @@ import styled from "styled-components";
 import { breakpoints } from "../UI/Breakpoints/breakpoints.js";
 
 export const FooterContainerStyled = styled.footer`
-  position: relative;
-  height: 6.25rem;
+  margin-top: auto;
+  width: 100%;
   background: linear-gradient(
     135deg,
     rgba(56, 92, 170, 1) 10%,
@@ -15,32 +15,77 @@ export const FooterContainerStyled = styled.footer`
     rgba(8, 15, 32, 1) 75%,
     rgba(6, 11, 25, 1) 90%
   );
+  color: #fff;
+`;
+
+export const FooterInnerStyled = styled.div`
+  width: min(1200px, 100%);
+  margin: 0 auto;
+  padding: 1.5rem 2rem;
   display: flex;
-  justify-content: center;
   align-items: center;
-  margin-top: auto;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
 
-  p span {
-    font-weight: 800;
-  }
   @media (max-width: ${breakpoints.tablet}) {
-    width: 100%;
-  }
-
-  @media (max-width: ${breakpoints.mobile}) {
-    width: 100%;
+    flex-direction: column;
+    text-align: center;
   }
 `;
 
-export const LinksContainerStyled = styled.div`
+export const BrandingStyled = styled.div`
   display: flex;
-  align-items: center;
-  gap: 1rem;
-  color: #fff;
+  flex-direction: column;
+  gap: 0.5rem;
 
-  a {
-    color: inherit;
-    text-decoration: none;
-    font-weight: 600;
+  p {
+    margin: 0;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+
+  @media (max-width: ${breakpoints.tablet}) {
+    align-items: center;
+  }
+`;
+
+export const ContactLinkStyled = styled.a`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: inherit;
+  text-decoration: none;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+
+  svg {
+    font-size: 1.25rem;
+  }
+`;
+
+export const SocialLinksStyled = styled.div`
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+`;
+
+export const SocialLinkStyled = styled.a`
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.18);
+  font-size: 1.2rem;
+  transition: transform 0.2s ease, background 0.2s ease;
+
+  &:hover,
+  &:focus-visible {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px) scale(1.05);
   }
 `;

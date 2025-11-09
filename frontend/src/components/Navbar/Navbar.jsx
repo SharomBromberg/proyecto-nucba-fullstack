@@ -6,13 +6,18 @@ import CartIcon from './CartIcon/CartIcon'
 import ModalCart from './ModalCart/ModalCart'
 import ModalUser from './ModalUser/ModalUser'
 import {
+	BrandLinkStyled,
+	BrandTitleStyled,
 	CartNavStyled,
 	CustomImageStyled,
 	HamburgerButton,
 	LinkContainerStyled,
 	LinksContainerStyled,
-	NavbarContainerStyled,
 	MenuOverlayStyled,
+	NavbarContainerStyled,
+	NavbarContentStyled,
+	NavActionsStyled,
+	NavLinksGroupStyled,
 	SpanStyled,
 	UserContainerStyled,
 	UserNavStyled,
@@ -86,63 +91,70 @@ function Navbar() {
 			{isMobile && isMobileMenuOpen && (
 				<MenuOverlayStyled onClick={() => setIsMobileMenuOpen(false)} />
 			)}
-			<div>
-				<Link to="/">
+			<NavbarContentStyled>
+				<BrandLinkStyled to="/">
 					<CustomImageStyled src="/assets/logo.png" alt="Logo" />
-				</Link>
-			</div>
-			{isMobile && (
-				<HamburgerButton
-					ref={toggleButtonRef}
-					type="button"
-					onClick={handleToggleMenu}
-					aria-label="Abrir menú"
-				>
-					{isMobileMenuOpen ? <FiX /> : <FiMenu />}
-				</HamburgerButton>
-			)}
-			<LinksContainerStyled
-				ref={menuRef}
-				$isMobile={isMobile}
-				$isOpen={shouldShowLinks}
-			>
-				<motion.div whileTap={{ scale: 0.97 }}>
-					<Link to="/" onClick={handleMenuItemClick}>
-						<LinkContainerStyled>
-							<FiHome color="c8a2ff" />
-						</LinkContainerStyled>
-						Home
-					</Link>
-				</motion.div>
-				<CartNavStyled onClick={handleMenuItemClick}>
-					<CartIcon />
-				</CartNavStyled>
-
-				{currentUser?.role === 'admin' && (
-					<motion.div whileTap={{ scale: 0.97 }}>
-						<Link to="/admin/productos" onClick={handleMenuItemClick}>
-							<LinkContainerStyled>
-								<FiSettings color="c8a2ff" />
-							</LinkContainerStyled>
-							Admin
-						</Link>
-					</motion.div>
-				)}
-
-				<UserNavStyled>
-					<UserContainerStyled
-						onClick={() => {
-							handleMenuItemClick()
-							currentUser ? dispatch(toggleMenuHidden()) : navigate('/register')
-						}}
+					<BrandTitleStyled>Tecsisman</BrandTitleStyled>
+				</BrandLinkStyled>
+				{isMobile && (
+					<HamburgerButton
+						ref={toggleButtonRef}
+						type="button"
+						onClick={handleToggleMenu}
+						aria-label="Abrir menu"
 					>
-						<SpanStyled>
-							{currentUser ? `${userDisplayName}` : 'Inicia Sesion'}
-						</SpanStyled>
-						<FiUser color="c8a2ff" />
-					</UserContainerStyled>
-				</UserNavStyled>
-			</LinksContainerStyled>
+						{isMobileMenuOpen ? <FiX /> : <FiMenu />}
+					</HamburgerButton>
+				)}
+				<LinksContainerStyled
+					ref={menuRef}
+					$isMobile={isMobile}
+					$isOpen={shouldShowLinks}
+				>
+					<NavLinksGroupStyled>
+						<motion.div whileTap={{ scale: 0.97 }}>
+							<Link to="/" onClick={handleMenuItemClick}>
+								<LinkContainerStyled>
+									<FiHome color="c8a2ff" />
+								</LinkContainerStyled>
+								Home
+							</Link>
+						</motion.div>
+						{currentUser?.role === 'admin' && (
+							<motion.div whileTap={{ scale: 0.97 }}>
+								<Link to="/admin/productos" onClick={handleMenuItemClick}>
+									<LinkContainerStyled>
+										<FiSettings color="c8a2ff" />
+									</LinkContainerStyled>
+									Admin
+								</Link>
+							</motion.div>
+						)}
+					</NavLinksGroupStyled>
+
+					<NavActionsStyled>
+						<CartNavStyled onClick={handleMenuItemClick}>
+							<CartIcon />
+						</CartNavStyled>
+
+						<UserNavStyled>
+							<UserContainerStyled
+								onClick={() => {
+									handleMenuItemClick()
+									currentUser
+										? dispatch(toggleMenuHidden())
+										: navigate('/register')
+								}}
+							>
+								<SpanStyled>
+									{currentUser ? `${userDisplayName}` : 'Inicia Sesion'}
+								</SpanStyled>
+								<FiUser color="c8a2ff" />
+							</UserContainerStyled>
+						</UserNavStyled>
+					</NavActionsStyled>
+				</LinksContainerStyled>
+			</NavbarContentStyled>
 		</NavbarContainerStyled>
 	)
 }
